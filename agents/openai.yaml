@@ -1,0 +1,4 @@
+interface:
+  display_name: "LinkedIn Ad Asset Factory"
+  short_description: "Build and run B2B LinkedIn ad workflows"
+  default_prompt: "Use $linkedin-ad-asset-factory to turn my campaign sources into reviewed LinkedIn ad assets."
