@@ -1,4 +1,0 @@
-interface:
-  display_name: "LinkedIn Ad Asset Factory"
-  short_description: "Set up and run B2B LinkedIn ad workflows in Codex"
-  default_prompt: "Use $linkedin-ad-asset-factory to complete initial setup, then prepare a reviewed LinkedIn ad dry-run."

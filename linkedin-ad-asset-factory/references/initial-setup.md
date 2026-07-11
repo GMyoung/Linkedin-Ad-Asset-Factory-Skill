@@ -1,37 +1,36 @@
-# Initial Codex Setup
+# Initial Setup (Any Compatible Harness)
 
 Use this reference on the first invocation or when preflight reports a failed prerequisite.
 
-## What the bootstrap checks
+## What the preflight checks
 
 Run:
 
-```powershell
-python ../../scripts/bootstrap_codex.py --check-only --json
+```text
+python scripts/preflight.py --json
 ```
 
 It reports, without exposing secret values:
 
-- whether the `codex` CLI is available;
-- whether this plugin is installed and enabled from its local marketplace;
-- whether `OPENAI_API_KEY` is present in the current Codex process;
+- the current skill directory and optional `FACTORY_ROOT`;
+- whether `OPENAI_API_KEY` is present in the current harness process;
 - whether a supplied `FACTORY_ROOT` exists.
 
-## Install the local Codex plugin
+## Install for a harness
 
 From a clone of this repository, run:
 
-```powershell
-python .\plugins\linkedin-ad-asset-factory\scripts\bootstrap_codex.py --install-plugin --json
+```text
+python setup.py
 ```
 
-The bootstrap registers this repository as the `linkedin-ad-asset-factory` marketplace when necessary, then installs the bundled plugin. It is idempotent: it refuses to overwrite a marketplace with the same name from a different location.
+Target a supported host with `python setup.py --host codex`, `claude`, `cursor`, `opencode`, `factory`, or `kiro`. Use `python setup.py --skills-dir <directory>` for any other harness that reads Agent Skills folders. The installer does not overwrite an unmanaged destination unless the user passes `--force`.
 
-After installation, start a new Codex task so the new plugin skill is loaded.
+Restart the selected harness (or start a new task) so it discovers the skill.
 
 ## Set an OpenAI API key yourself
 
-An API key is required only for real image generation. Do not paste it into Codex chat, source files, a Google Doc, or any generated artifact.
+An API key is required only for real image generation. Do not paste it into agent chat, source files, a Google Doc, or any generated artifact.
 
 1. Create or manage a key in the [OpenAI API key dashboard](https://platform.openai.com/api-keys).
 2. In PowerShell, save it for your Windows user without echoing it:
@@ -42,7 +41,7 @@ An API key is required only for real image generation. Do not paste it into Code
    Remove-Variable key
    ```
 
-3. Completely restart Codex so its process receives the new environment variable.
+3. Completely restart the harness so its process receives the new environment variable.
 4. Invoke this skill again; preflight will report only whether the key is available.
 
 For a one-terminal test that does not persist the key, use:
@@ -52,6 +51,16 @@ $env:OPENAI_API_KEY = Read-Host "Paste your OpenAI API key"
 ```
 
 That value lasts only for the current terminal process. Never run a command that prints `$env:OPENAI_API_KEY`.
+
+On macOS/Linux, a one-session setup is:
+
+```bash
+read -rs OPENAI_API_KEY
+export OPENAI_API_KEY
+printf '\n'
+```
+
+Launch the harness from that same terminal. For persistent storage, prefer an OS or organization secret manager; a gitignored `.env` is acceptable only when the factory explicitly supports it. Never commit an `.env` file.
 
 ## Dry-run without a key
 

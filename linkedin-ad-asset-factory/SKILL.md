@@ -1,26 +1,26 @@
 ---
 name: linkedin-ad-asset-factory
-description: Run the Codex-only setup and approval-gated B2B LinkedIn ad asset workflow. Use inside Codex CLI or the Codex desktop harness for first-time plugin setup, OpenAI API key guidance, factory discovery, layered campaign intake, dry-runs, audit review, approved image generation, revisions, exports, or factory changes.
+description: Walk through initial setup and run an approval-gated B2B LinkedIn ad asset workflow. Use in any Agent Skills-compatible harness for first-time setup, OpenAI API key guidance, factory discovery, layered campaign intake, dry-runs, audit review, approved image generation, revisions, exports, or factory changes.
 ---
 
 # LinkedIn Ad Asset Factory
 
-Run this skill only inside a Codex harness. If `codex` is unavailable, stop and direct the user to install or open Codex; do not attempt to operate this skill from another agent runtime.
+Use this portable skill in any harness that discovers a directory containing `SKILL.md`. Do not assume a harness-specific CLI, plugin manager, browser integration, or file path.
 
 ## First invocation: run setup before campaign work
 
-1. Run the plugin preflight from the skill directory:
+1. Run the portable preflight from the skill directory:
 
-   ```powershell
-   python ../../scripts/bootstrap_codex.py --check-only --json
+   ```text
+   python scripts/preflight.py --json
    ```
 
 2. Read [references/initial-setup.md](references/initial-setup.md). Report only setup status; never print, request, or persist a secret value.
-3. If the plugin is not installed, tell the user to run the repository bootstrap command from `README.md`, then start a new Codex task.
+3. If the preflight cannot run, perform its checks manually: identify the harness, confirm the skill folder is installed, check only whether `OPENAI_API_KEY` is present, and locate `FACTORY_ROOT`.
 4. If `OPENAI_API_KEY` is missing, walk the user through setting it themselves. Dry-run remains available without a key; real image generation does not.
 5. Resolve `FACTORY_ROOT` from the user-provided path, current directory, or workspace entrypoints. If no implementation exists, scaffold it only when the user asks to build one.
 
-Do not repeat the setup walkthrough after preflight is healthy unless the user asks or a required status changes.
+Do not repeat the setup walkthrough after preflight is healthy unless the user asks or a required status changes. Direct users to repository `setup.py` for automatic installation into supported harnesses or `--skills-dir` for any other compatible harness.
 
 ## Load references only when needed
 
@@ -53,4 +53,4 @@ Keep `design_sources`, `content_sources`, `generation_requirements`, `reference_
 
 ## Completion response
 
-Report the Codex setup status, command run, `FACTORY_ROOT`, dry-run/real mode, selected pattern and visual IDs, audit result, output/review location, and the next safe command. Never include secret values.
+Report the harness/setup status, command run, `FACTORY_ROOT`, dry-run/real mode, selected pattern and visual IDs, audit result, output/review location, and the next safe command. Never include secret values.

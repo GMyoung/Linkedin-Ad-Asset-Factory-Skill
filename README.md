@@ -1,111 +1,143 @@
-# LinkedIn Ad Asset Factory for Codex
+# LinkedIn Ad Asset Factory
 
-> A Codex-only plugin that walks through setup, then runs an approval-gated B2B LinkedIn ad asset workflow.
+> A portable B2B LinkedIn-ad skill: setup once, build a reviewed campaign, and generate only after approval.
 
-[![Codex plugin](https://img.shields.io/badge/Codex-plugin-0A66C2)](./plugins/linkedin-ad-asset-factory/.codex-plugin/plugin.json)
-[![One bundled skill](https://img.shields.io/badge/bundled%20skills-1-111827)](./plugins/linkedin-ad-asset-factory/skills/linkedin-ad-asset-factory/SKILL.md)
+[![Agent Skills](https://img.shields.io/badge/Agent%20Skills-portable-0A66C2)](./linkedin-ad-asset-factory/SKILL.md)
+[![OpenAI image API](https://img.shields.io/badge/OpenAI-image%20generation-412991)](https://platform.openai.com/api-keys)
 
-This repository is a **Codex plugin marketplace** containing one skill: `linkedin-ad-asset-factory`.
+LinkedIn Ad Asset Factory turns an Agent Skills-compatible coding harness into a focused creative-production workflow. It takes a campaign brief plus URLs, PDFs, images, copy, brand material, and factual evidence; produces reviewable briefs and dry-run artifacts; and requires explicit approval before paid image generation.
 
-The plugin is designed to do two things in order:
-
-1. walk through the local initial setup without handling secret values;
-2. operate or build a B2B LinkedIn ad asset factory using dry-runs, audits, approval gates, and structured artifacts.
-
-## One-command local setup
-
-Clone this repository, then run the bootstrap. It registers the repository as a local Codex marketplace and installs the bundled plugin automatically.
-
-```powershell
-git clone https://github.com/GMyoung/Linkedin-Ad-Asset-Factory-Skill.git
-cd Linkedin-Ad-Asset-Factory-Skill
-python .\plugins\linkedin-ad-asset-factory\scripts\bootstrap_codex.py --install-plugin --json
-```
-
-Then start a **new Codex task** and say:
+This is a process, not a prompt dump:
 
 ```text
-Use $linkedin-ad-asset-factory to complete the initial setup walkthrough.
+Set up -> Intake -> Extract -> Plan -> Dry run -> Audit -> Approve -> Generate -> Revise -> Export
 ```
 
-The bootstrap is idempotent. It will not silently replace a marketplace with the same name from a different local path.
+## Quick start
 
-## API key setup
+1. Install the skill (about one minute).
+2. Ask your harness to use `linkedin-ad-asset-factory`.
+3. It begins with a setup walkthrough, then stops at dry-run until you approve generation.
 
-You need an OpenAI API key only for real image generation. Do not paste it into Codex chat.
+## Install — one command
 
-1. Create a key in the [OpenAI API key dashboard](https://platform.openai.com/api-keys).
-2. Save it for your Windows user without echoing it:
+Requirements: Git and Python 3.10+. For real image generation, you will later configure your own OpenAI API key.
 
-   ```powershell
-   $key = Read-Host "Paste your OpenAI API key"
-   [Environment]::SetEnvironmentVariable("OPENAI_API_KEY", $key, "User")
-   Remove-Variable key
-   ```
-
-3. Restart Codex completely.
-4. Run the setup walkthrough again. It reports only whether the key is present.
-
-Dry-run works without a key. The skill will not begin real image generation until the key is available, the copy audit passes, and you explicitly approve it.
-
-## What happens on first use
-
-```mermaid
-flowchart LR
-    A["Plugin installed"] --> B["Codex preflight"]
-    B --> C{"API key present?"}
-    C -->|"No"| D["Explain self-service setup"]
-    C -->|"Yes"| E["Discover FACTORY_ROOT"]
-    D --> E
-    E --> F["Campaign dry-run"]
-    F --> G["Audit + approval"]
-    G --> H["Optional paid generation"]
+```text
+git clone --depth 1 https://github.com/GMyoung/Linkedin-Ad-Asset-Factory-Skill.git
+cd Linkedin-Ad-Asset-Factory-Skill
+python setup.py
 ```
 
-Preflight checks the Codex CLI, plugin state, optional `FACTORY_ROOT`, and the presence of `OPENAI_API_KEY`. It never reads or prints the key.
+`setup.py` detects installed harnesses and installs the portable `SKILL.md` folder into each discovered skill directory. On Windows it copies the skill; on macOS/Linux it symlinks it, so `git pull` updates installed skills automatically.
 
-## Skill scope
+Restart the harness (or open a new task), then say either:
 
-The bundled skill supports:
+```text
+Use linkedin-ad-asset-factory to complete the initial setup walkthrough.
+```
 
-- initial Codex/plugin/API-key walkthrough;
-- layered campaign intake from URLs, PDFs, images, text, brand guides, and factual evidence;
-- pattern/visual selection and structured variant planning;
-- dry-run briefs, visible-copy review, and audit artifacts;
-- explicit approval before real generation;
-- selected-asset revisions that preserve approved work;
-- Markdown export and optional Drive handoff;
-- modular factory changes, including file-based taxonomy extensions.
+or simply describe the job:
 
-It runs only in Codex CLI or the Codex desktop harness. Other agent runtimes are intentionally unsupported.
+```text
+Create a five-asset LinkedIn campaign dry-run from this brief and these brand files.
+```
 
-## Project layout
+## Supported harnesses
+
+The skill itself works in any harness that discovers an Agent Skills directory containing `SKILL.md`. The installer knows the following common locations:
+
+| Harness | Install command | Destination |
+| --- | --- | --- |
+| OpenAI Codex | `python setup.py --host codex` | `~/.codex/skills/` |
+| Claude Code | `python setup.py --host claude` | `~/.claude/skills/` |
+| Cursor | `python setup.py --host cursor` | `~/.cursor/skills/` |
+| OpenCode | `python setup.py --host opencode` | `~/.config/opencode/skills/` |
+| Factory Droid | `python setup.py --host factory` | `~/.factory/skills/` |
+| Kiro | `python setup.py --host kiro` | `~/.kiro/skills/` |
+
+Install every listed target with `python setup.py --host all`. For another compatible harness, give its skills parent directory directly:
+
+```text
+python setup.py --skills-dir /path/to/harness/skills
+```
+
+The installer refuses to replace an unmanaged existing skill. Review it first, then use `--force` only if replacement is intended. Check without changing anything:
+
+```text
+python setup.py --check --json
+```
+
+## First use: a safe setup walkthrough
+
+The first invocation checks the installed skill, optional factory root, and only the presence—not the value—of `OPENAI_API_KEY`. It then guides intake and offers dry-run before any paid generation.
+
+Set your API key yourself; never paste it into agent chat, commits, screenshots, or documents.
+
+Windows PowerShell:
+
+```powershell
+$key = Read-Host "Paste your OpenAI API key"
+[Environment]::SetEnvironmentVariable("OPENAI_API_KEY", $key, "User")
+Remove-Variable key
+```
+
+Restart your harness after setting it. On macOS/Linux, set the variable through your shell profile or your organization’s secret manager. The skill never reads or prints its value.
+
+For a one-session macOS/Linux setup, start the harness from the same terminal:
+
+```bash
+read -rs OPENAI_API_KEY
+export OPENAI_API_KEY
+printf '\n'
+```
+
+For persistent use, prefer your OS or organization secret manager; alternatively use a gitignored `.env` at the factory root if that factory supports it. Never commit the file.
+
+No key is needed for intake, planning, or dry-run. A key plus explicit user approval is required for real image generation.
+
+## What the skill does
+
+| Stage | Outcome |
+| --- | --- |
+| Preflight | Verify environment, key presence, and optional factory root. |
+| Intake | Separate design, content, requirements, references, brand assets, and factual evidence. |
+| Extract | Turn supplied material into traceable campaign facts and visual guidance. |
+| Plan | Select patterns/visuals and create structured variant briefs. |
+| Dry run | Produce copy plans, prompt plans, manifests, and review artifacts without API spend. |
+| Audit + approval | Check source grounding, claims, text budgets, and user approval. |
+| Generate + revise | Create only approved assets; preserve approved work during targeted revisions. |
+| Export | Produce Markdown and an optional handoff package. |
+
+## Safety boundary
+
+- Do not invent claims, outcomes, statistics, customers, awards, partnerships, or endorsements.
+- Do not treat blocked, captcha, error, or bot-protection pages as campaign evidence.
+- Do not copy third-party ad creative.
+- Default to dry-run. Treat real generation as a paid, explicit-approval step.
+- Keep API keys in environment variables or a gitignored secret store only.
+
+## Repository layout
 
 ```text
 .
-├── .agents/plugins/marketplace.json
-├── plugins/linkedin-ad-asset-factory/
-│   ├── .codex-plugin/plugin.json
-│   ├── scripts/bootstrap_codex.py
-│   └── skills/linkedin-ad-asset-factory/
-│       ├── SKILL.md
-│       ├── agents/openai.yaml
-│       └── references/
-└── README.md
+├── setup.py                         # cross-harness installer and status check
+└── linkedin-ad-asset-factory/
+    ├── SKILL.md                     # portable agent execution contract
+    ├── scripts/preflight.py         # secret-safe first-run status check
+    └── references/                  # workflow, architecture, taxonomy, QA/safety
 ```
 
-## Safety
+## Updating or removing
 
-- Never paste or commit API keys, tokens, passwords, or private keys.
-- Default to dry-run; real generation requires explicit approval.
-- Do not copy third-party ads or invent claims, endorsements, statistics, or customer evidence.
-- Do not use bot-protection, captcha, blocked, or error pages as campaign sources.
+For symlink installs on macOS/Linux, update the clone and restart the harness:
 
-## Validate locally
-
-```powershell
-python .\plugins\linkedin-ad-asset-factory\scripts\bootstrap_codex.py --check-only --json
-codex plugin list --marketplace linkedin-ad-asset-factory --available --json
+```text
+git pull
 ```
 
-Maintainers should additionally validate the plugin manifest and `SKILL.md` with their Codex skill/plugin tooling before publishing.
+For Windows copy installs, rerun `python setup.py --host <name>` after `git pull`. To remove it, delete the managed `linkedin-ad-asset-factory` folder from the listed skills directory.
+
+## Design inspiration
+
+The installation and documentation model follows the useful parts of [gstack](https://github.com/garrytan/gstack): one command, automatic host detection, explicit per-host installation, a safe update path, and a workflow users can try immediately. This repository contains one portable creative-production skill rather than a harness-specific plugin.
