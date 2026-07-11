@@ -1,0 +1,36 @@
+{
+  "name": "linkedin-ad-asset-factory",
+  "version": "0.2.0",
+  "description": "Codex-only setup and workflow for B2B LinkedIn ad asset factories.",
+  "author": {
+    "name": "GMyoung",
+    "url": "https://github.com/GMyoung"
+  },
+  "homepage": "https://github.com/GMyoung/Linkedin-Ad-Asset-Factory-Skill",
+  "repository": "https://github.com/GMyoung/Linkedin-Ad-Asset-Factory-Skill",
+  "keywords": [
+    "codex",
+    "linkedin",
+    "b2b",
+    "ad-assets",
+    "image-generation"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "LinkedIn Ad Asset Factory",
+    "shortDescription": "Set up and run auditable LinkedIn ad workflows in Codex.",
+    "longDescription": "A Codex-only plugin that installs its local marketplace entry, walks through OpenAI API key setup without collecting secrets, and operates an approval-gated B2B LinkedIn ad asset factory.",
+    "developerName": "GMyoung",
+    "category": "Productivity",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "defaultPrompt": [
+      "Run the LinkedIn Ad Asset Factory initial setup walkthrough.",
+      "Prepare a dry-run for this B2B LinkedIn campaign.",
+      "Review and revise one approved LinkedIn ad asset."
+    ],
+    "brandColor": "#0A66C2"
+  }
+}
