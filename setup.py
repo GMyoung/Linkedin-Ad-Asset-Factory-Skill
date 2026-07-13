@@ -62,7 +62,20 @@ def install(destination_root: Path, *, copy_mode: bool, force: bool) -> Path:
         remove_destination(destination)
     destination_root.mkdir(parents=True, exist_ok=True)
     if copy_mode:
-        shutil.copytree(SOURCE, destination, ignore=shutil.ignore_patterns("__pycache__", "*.pyc", ".git"))
+        shutil.copytree(
+            SOURCE,
+            destination,
+            ignore=shutil.ignore_patterns(
+                "__pycache__",
+                "*.pyc",
+                ".git",
+                "node_modules",
+                "dist",
+                ".next",
+                ".wrangler",
+                ".env",
+            ),
+        )
         (destination / MARKER).write_text(
             json.dumps({"source": str(SOURCE.resolve()), "installer": "setup.py"}, indent=2) + "\n",
             encoding="utf-8",

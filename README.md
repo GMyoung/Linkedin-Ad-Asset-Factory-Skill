@@ -1,23 +1,23 @@
 # LinkedIn Ad Asset Factory
 
-> A portable B2B LinkedIn-ad skill: setup once, build a reviewed campaign, and generate only after approval.
+> A portable B2B LinkedIn-ad skill: give it any usable URL or file, generate five ads, and publish them to Harbor Network automatically.
 
 [![Agent Skills](https://img.shields.io/badge/Agent%20Skills-portable-0A66C2)](./linkedin-ad-asset-factory/SKILL.md)
 [![OpenAI image API](https://img.shields.io/badge/OpenAI-image%20generation-412991)](https://platform.openai.com/api-keys)
 
-LinkedIn Ad Asset Factory turns an Agent Skills-compatible coding harness into a focused creative-production workflow. It takes a campaign brief plus URLs, PDFs, images, copy, brand material, and factual evidence; produces reviewable briefs and dry-run artifacts; and requires explicit approval before paid image generation.
+LinkedIn Ad Asset Factory turns an Agent Skills-compatible coding harness into a focused creative-production workflow. Any readable URL or file starts a complete launch when `OPENAI_API_KEY` is configured: dry-run copy planning, five real image assets, and automatic deployment to the bundled Harbor Network site.
 
 This is a process, not a prompt dump:
 
 ```text
-Set up -> Intake -> Extract -> Plan -> Dry run -> Audit -> Approve -> Generate -> Revise -> Export
+Set up -> Intake any URL/file -> Plan copy -> Generate 5 -> Deploy Harbor -> Modify side by side
 ```
 
 ## Quick start
 
 1. Install the skill (about one minute).
 2. Ask your harness to use `linkedin-ad-asset-factory`.
-3. It begins with a setup walkthrough, then stops at dry-run until you approve generation.
+3. Supply a URL or file. The skill runs the five-asset batch and deploys it without a second approval prompt.
 
 ## Install — one command
 
@@ -40,7 +40,7 @@ Use linkedin-ad-asset-factory to complete the initial setup walkthrough.
 or simply describe the job:
 
 ```text
-Create a five-asset LinkedIn campaign dry-run from this brief and these brand files.
+Use this URL and the attached files to generate five LinkedIn ads and publish them to Harbor Network.
 ```
 
 ## Supported harnesses
@@ -70,7 +70,7 @@ python setup.py --check --json
 
 ## First use: a safe setup walkthrough
 
-The first invocation checks the installed skill, optional factory root, and only the presence—not the value—of `OPENAI_API_KEY`. It then guides intake and offers dry-run before any paid generation.
+The first invocation checks the installed skill, optional factory root, and only the presence—not the value—of `OPENAI_API_KEY`. After that, any usable URL or file creates the dry-run copy, five real images, and a Harbor Network deployment.
 
 Set your API key yourself; never paste it into agent chat, commits, screenshots, or documents.
 
@@ -94,7 +94,7 @@ printf '\n'
 
 For persistent use, prefer your OS or organization secret manager; alternatively use a gitignored `.env` at the factory root if that factory supports it. Never commit the file.
 
-No key is needed for intake, planning, or dry-run. A key plus explicit user approval is required for real image generation.
+No key is needed to inspect inputs, but the default launch requires a configured key because it must finish with five real images and a deployed site.
 
 ## What the skill does
 
@@ -104,9 +104,10 @@ No key is needed for intake, planning, or dry-run. A key plus explicit user appr
 | Intake | Separate design, content, requirements, references, brand assets, and factual evidence. |
 | Extract | Turn supplied material into traceable campaign facts and visual guidance. |
 | Plan | Select patterns/visuals and create structured variant briefs. |
-| Dry run | Produce copy plans, prompt plans, manifests, and review artifacts without API spend. |
-| Audit + approval | Check source grounding, claims, text budgets, and user approval. |
-| Generate + revise | Create only approved assets; preserve approved work during targeted revisions. |
+| Copy plan | Produce the dry-run copy, prompts, manifests, and audit artifacts automatically. |
+| Generate | Create exactly five real assets from the frozen source-grounded plan. |
+| Deploy | Sync images and post copy into ordinary sponsored posts on the bundled Harbor Network site and publish it with Sites. |
+| Modify | Accept a change request plus reference files and show the new ad beside the original. |
 | Export | Produce Markdown and an optional handoff package. |
 
 ## Safety boundary
@@ -114,7 +115,7 @@ No key is needed for intake, planning, or dry-run. A key plus explicit user appr
 - Do not invent claims, outcomes, statistics, customers, awards, partnerships, or endorsements.
 - Do not treat blocked, captcha, error, or bot-protection pages as campaign evidence.
 - Do not copy third-party ad creative.
-- Default to dry-run. Treat real generation as a paid, explicit-approval step.
+- Treat any usable URL or file as the launch request. Infer missing campaign fields conservatively and finish with five real images plus a Harbor deployment.
 - Keep API keys in environment variables or a gitignored secret store only.
 
 ## Repository layout
@@ -124,7 +125,9 @@ No key is needed for intake, planning, or dry-run. A key plus explicit user appr
 ├── setup.py                         # cross-harness installer and status check
 └── linkedin-ad-asset-factory/
     ├── SKILL.md                     # portable agent execution contract
+    ├── integrations/harbor-network/ # bundled Sites deployment target
     ├── scripts/preflight.py         # secret-safe first-run status check
+    ├── scripts/sync_harbor_campaign.py
     └── references/                  # workflow, architecture, taxonomy, QA/safety
 ```
 
