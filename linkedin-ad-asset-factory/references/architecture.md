@@ -173,7 +173,7 @@ Support:
 - mobile-width layout;
 - mock mode for tests.
 
-The bundled Harbor Network project is an output adapter, not a second campaign engine. Feed it only the generated images and structured `on_image_text_plan.json` data through `scripts/sync_harbor_campaign.py`; then use the Sites build and hosting workflow. Keep revision image bytes in its logical `AD_ASSETS` R2 binding.
+The bundled Harbor Network project is an output adapter, not a second campaign engine. Feed it only the generated images and structured `on_image_text_plan.json` data through `scripts/sync_harbor_campaign.py`; then build it and launch a verified local server by default. Sites build and hosting are optional and require an explicit user request. Keep hosted revision image bytes in its logical `AD_ASSETS` R2 binding.
 
 ## Configuration and secrets
 

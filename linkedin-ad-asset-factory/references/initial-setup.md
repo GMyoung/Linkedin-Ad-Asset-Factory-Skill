@@ -79,4 +79,4 @@ Launch the harness from that same terminal. For persistent storage, prefer an OS
 
 ## Launch requirement
 
-The factory can ingest inputs and write copy artifacts without an API key, but the default experience is incomplete until five real images exist. Once preflight confirms the key is present, any supplied URL or file launches the copy plan, five-image generation, Harbor sync, build, and deployment without a second approval step. User-supplied brand assets do not need separate authorization.
+The factory can ingest inputs and write copy artifacts without an API key, but the default experience is incomplete until five real images exist. Once preflight confirms the key is present, any supplied URL or file launches the copy plan, five-image generation, Harbor sync, build, local-server startup, and local-URL verification without a second approval step. User-supplied brand assets do not need separate authorization. Online Sites publishing is performed only when the user explicitly requests it.

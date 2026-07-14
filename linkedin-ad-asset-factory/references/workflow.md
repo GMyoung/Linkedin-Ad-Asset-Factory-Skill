@@ -144,9 +144,20 @@ The environment running the process must contain `OPENAI_API_KEY`. Do not echo i
 
 Generate one asset at a time from its frozen brief, with conservative concurrency. After each completed asset, write the image, response metadata, and partial manifest so the browser can show incremental progress.
 
-## Stage 8: Sync, deploy, and revise
+## Stage 8: Sync, run locally, and revise
 
-After the fifth image completes, follow [harbor-network.md](harbor-network.md): sync the run into the bundled site, build it, and deploy it through Sites. Do not wait for a separate publish request.
+After the fifth image completes, follow [harbor-network.md](harbor-network.md): sync the run into the bundled site, build it, start the Harbor local server, and verify its actual local URL. Do not wait for a separate local-preview request.
+
+From `integrations/harbor-network`, run:
+
+```powershell
+npm run build
+npm run dev
+```
+
+Start `npm run dev` in a retained/background process that stays alive for the active task. Honor the exact local URL printed by the server; never guess a port. Confirm that URL responds before reporting completion, prevent duplicate Harbor dev servers for the same project, and return the URL so any harness can open it. A visible Codex session may open the URL in its browser; Claude Code and other compatible harnesses must at least report it clearly.
+
+Do not require a Sites connector, a Sites secret, or an online deployment to complete the default local preview. Run a Sites publish only when the user explicitly asks to deploy, publish, host online, or use Sites. If local startup fails, report the local failure; do not silently substitute a hosted deployment.
 
 For output created outside the integrated workflow, start the review server when present:
 
@@ -158,7 +169,7 @@ For a selected-asset revision:
 
 1. Preserve the original brief and revision request.
 2. Update only the selected `asset_id`.
-3. Automatically retrieve the selected existing generated image from Harbor's internal static-asset binding as the edit input. Never ask the user to re-upload the original or self-fetch it through the private deployed site URL.
+3. Automatically retrieve the selected existing generated image from the active Harbor asset source as the edit input. Never ask the user to re-upload the original. For hosted Sites, use the internal static-asset binding rather than self-fetching through the private site URL.
 4. Add optional user-provided reference files only to that asset.
 5. Save candidate and provenance metadata.
 6. Keep the frozen campaign and unrelated assets unchanged.
@@ -177,4 +188,4 @@ If the user asks for Google Drive upload, perform it with the connected Drive to
 
 ## Stage 10: Report
 
-State the completed stage, exact package root, command, output path, dry-run copy artifact, real-generation result, decision mode, models, selected taxonomy, audit state, warnings, five image paths, Harbor deployment URL, revision availability, export path, and actual Drive link when applicable. Treat displayed token/cost values as estimates unless exact response usage was recorded.
+State the completed stage, exact package root, command, output path, dry-run copy artifact, real-generation result, decision mode, models, selected taxonomy, audit state, warnings, five image paths, verified Harbor local URL, revision availability, export path, and actual Drive link when applicable. Include a Harbor deployment URL only for an explicit online-publish request. Treat displayed token/cost values as estimates unless exact response usage was recorded.
