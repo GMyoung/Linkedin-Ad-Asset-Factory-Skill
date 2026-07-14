@@ -70,3 +70,14 @@ test("keeps every shared Avatar instance square and circular", async () => {
   assert.match(css, /\.avatarImage\s*\{[^}]*border-radius:\s*50%;/s);
   assert.match(css, /\.avatarImage\s*\{[^}]*object-fit:\s*cover;/s);
 });
+
+test("uses a text-only Harbor footer signature", async () => {
+  const [page, css] = await Promise.all([
+    readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
+  ]);
+
+  assert.match(page, /<span className="miniBrand">Harbor<\/span> Fictional Harbor Network © 2026/);
+  assert.doesNotMatch(page, /<span className="miniBrand">Network<\/span><b>in<\/b>/);
+  assert.doesNotMatch(css, /\.footerLinks p b\s*\{/);
+});

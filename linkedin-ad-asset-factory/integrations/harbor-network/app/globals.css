@@ -1873,18 +1873,6 @@ a {
   font-weight: 900;
 }
 
-.footerLinks p b {
-  display: inline-grid;
-  width: 13px;
-  height: 13px;
-  margin-right: 4px;
-  place-items: center;
-  border-radius: 1px;
-  background: var(--li-blue);
-  color: white;
-  font-size: 8px;
-}
-
 .messagingDock {
   position: fixed;
   z-index: 45;
