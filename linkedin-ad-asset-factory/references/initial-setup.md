@@ -18,15 +18,23 @@ It reports, without exposing secret values:
 
 ## Install for a harness
 
-From a clone of this repository, run:
+The recommended cross-harness install uses the Agent Skills CLI:
+
+```text
+npx skills add GMyoung/Linkedin-Ad-Asset-Factory-Skill --skill linkedin-ad-asset-factory -g
+```
+
+From a clone of this repository, use the Python fallback when Node.js is unavailable:
 
 ```text
 python setup.py
 ```
 
-Target a supported host with `python setup.py --host codex`, `claude`, `cursor`, `opencode`, `factory`, or `kiro`. Use `python setup.py --skills-dir <directory>` for any other harness that reads Agent Skills folders. The installer does not overwrite an unmanaged destination unless the user passes `--force`.
+Target a supported host with `python setup.py --host codex`, `claude`, `cursor`, `opencode`, `factory`, `kiro`, or `universal`. The universal target is `~/.agents/skills/`. Use `python setup.py --skills-dir <directory>` for any other harness that reads Agent Skills folders. The installer does not overwrite an unmanaged destination unless the user passes `--force`.
 
-Restart the selected harness (or start a new task) so it discovers the skill.
+Run `python setup.py --check --json` to verify the target path, `SKILL.md`, and frontmatter. A valid file layout does not prove that a running harness has refreshed its skill index.
+
+Restart the selected harness (or start a new task), then confirm `linkedin-ad-asset-factory` appears in its skill picker or list. If it does not, install with `--skills-dir` inside the same Windows, WSL, container, SSH, or remote-workspace environment where the harness runs.
 
 ## Set an OpenAI API key yourself
 
