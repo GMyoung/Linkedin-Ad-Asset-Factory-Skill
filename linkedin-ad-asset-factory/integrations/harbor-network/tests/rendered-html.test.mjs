@@ -81,3 +81,19 @@ test("uses a text-only Harbor footer signature", async () => {
   assert.doesNotMatch(page, /<span className="miniBrand">Network<\/span><b>in<\/b>/);
   assert.doesNotMatch(css, /\.footerLinks p b\s*\{/);
 });
+
+test("defaults the factory contract to a verified local Harbor preview", async () => {
+  const [skill, workflow, harbor] = await Promise.all([
+    readFile(new URL("../../../SKILL.md", import.meta.url), "utf8"),
+    readFile(new URL("../../../references/workflow.md", import.meta.url), "utf8"),
+    readFile(new URL("../../../references/harbor-network.md", import.meta.url), "utf8"),
+  ]);
+
+  assert.match(skill, /start its local server, and verify the actual local URL/i);
+  assert.match(skill, /Do not deploy with Sites unless the user explicitly asks/i);
+  assert.doesNotMatch(skill, /deploy it with Sites automatically/i);
+  assert.match(workflow, /npm run dev/);
+  assert.match(workflow, /Confirm that URL responds before reporting completion/i);
+  assert.match(harbor, /This local handoff is mandatory for every successful launch/i);
+  assert.match(harbor, /Use the Sites hosting workflow only when the user explicitly asks/i);
+});

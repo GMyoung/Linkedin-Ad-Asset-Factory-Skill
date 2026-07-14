@@ -1,6 +1,6 @@
 ---
 name: linkedin-ad-asset-factory
-description: Turn any supplied URL or file into five real B2B LinkedIn ad images and automatically publish them as ordinary sponsored posts on the bundled Harbor Network site. Use for first-time setup, source intake, five-image generation, Harbor deployment, per-ad Modify requests with reference uploads, side-by-side revisions, exports, or factory changes.
+description: Turn any supplied URL or file into five real B2B LinkedIn ad images, then sync, launch, and verify the bundled Harbor Network site locally by default. Use for first-time setup, source intake, five-image generation, local Harbor preview, explicit online deployment, per-ad Modify requests with reference uploads, revisions, exports, or factory changes.
 ---
 
 # LinkedIn Ad Asset Factory
@@ -30,7 +30,7 @@ Treat the presence of any usable URL or file as the launch instruction when `OPE
 - Infer audience, offer, funnel, and CTA conservatively from the source. Default the CTA to “Learn more” when the source does not support a stronger conversion action.
 - Produce the dry-run copy plan and audit as internal launch artifacts without pausing for review.
 - Generate exactly five real image assets, one at a time, from that plan.
-- Run `scripts/sync_harbor_campaign.py`, build the bundled Harbor Network site, and deploy it with Sites automatically.
+- Run `scripts/sync_harbor_campaign.py`, build the bundled Harbor Network site, start its local server, and verify the actual local URL before reporting completion. Do not deploy with Sites unless the user explicitly asks to deploy, publish, host online, or use Sites.
 - Publish each ad in the existing LinkedIn-style feed presentation: normal sponsor header, post text, image, headline/CTA caption, engagement row, and action bar. Use the dry-run copy as ordinary post/caption content, but never render a separate dry-run panel, campaign header, generated badge, taxonomy ID, or workflow label. Change only the Comment action to Modify; retain optional reference-file upload and an Original/New single-image revision viewer with left/right controls rather than a two-column image layout.
 - For every Modify request, automatically use the selected generated ad as the edit input. Ask for only the change request and optional reference files; never ask the user to upload the original ad again or read it back through a private-site HTTP request.
 - Treat user-supplied brand assets as campaign inputs without requesting separate authorization. Exclude unsupported claims and unaffiliated third-party marks or endorsements.
@@ -50,10 +50,10 @@ Work through these stages in order:
 ```text
 0 Preflight -> 1 Intake any URL/file -> 2 Classify -> 3 Extract -> 4 Plan
   -> 5 Dry-run copy/audit -> 6 Generate 5 -> 7 Sync Harbor
-  -> 8 Build and deploy -> 9 Modify/compare -> 10 Report
+  -> 8 Build and verify local Harbor -> 9 Modify/compare -> 10 Report
 ```
 
-Do not stop at the dry-run, local output, local preview, or deployment plan when a usable input and API key are available. Finish the five-image generation and Harbor deployment in the same launch.
+Do not stop at the dry-run, local output, or a local-preview plan when a usable input and API key are available. Finish five-image generation, Harbor sync, local-server startup, and local-URL verification in the same launch. Online deployment is an explicit opt-in, never a fallback for a failed local preview.
 
 Keep `design_sources`, `content_sources`, `generation_requirements`, `reference_examples`, `brand_assets`, and `factual_evidence` separate. Never turn them into one untraceable context block.
 
@@ -68,4 +68,4 @@ Keep `design_sources`, `content_sources`, `generation_requirements`, `reference_
 
 ## Completion response
 
-Report the harness/setup status, command run, `FACTORY_ROOT`, real-generation result, dry-run copy artifact, selected pattern and visual IDs, audit result, five image paths, Harbor deployment URL, and revision capability. Never include secret values.
+Report the harness/setup status, command run, `FACTORY_ROOT`, real-generation result, dry-run copy artifact, selected pattern and visual IDs, audit result, five image paths, verified Harbor local URL, and revision capability. Include a Harbor deployment URL only when the user explicitly requested online publishing. Never include secret values.

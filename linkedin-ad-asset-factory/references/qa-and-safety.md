@@ -100,7 +100,8 @@ When browser orchestration is in scope, test:
 - automatic dry-run copy generation without an approval pause;
 - visible-copy editing and audit display;
 - frozen-brief preservation;
-- automatic Harbor sync/build/deployment after five generated images;
+- automatic Harbor sync/build/local-server startup and verified local URL after five generated images;
+- Sites deployment only after an explicit user request, without replacing the required local preview;
 - ordinary LinkedIn-style sponsored-post presentation without a dry-run panel, campaign header, generated badge, taxonomy IDs, or workflow labels;
 - Modify action with optional image/text references;
 - Original/New side-by-side revision display;
@@ -124,7 +125,7 @@ When browser orchestration is in scope, test:
 7. **Visible-copy artifacts**: briefs contain structured text slots and dry-run writes copy plan, preview, and both audit formats.
 8. **Message coverage**: audit detects visible copy that drops the primary source promise.
 9. **No secrets**: scan tracked files and generated documentation for secret values and private key material.
-10. **Harbor handoff**: exactly five images and their source copy appear in the bundled site manifest, while the UI exposes only ordinary sponsored-post content and replaces only Comment with Modify.
+10. **Harbor handoff**: exactly five images and their source copy appear in the bundled site manifest, while the UI exposes only ordinary sponsored-post content and replaces only Comment with Modify. The local server starts exactly once, reports its actual URL, and that URL responds before completion.
 11. **Revision UI**: Modify accepts optional references and renders the new result beside the original without mutating unrelated assets.
 
 Run the project's most focused tests first, then its full verification script when present. Also run syntax/compile checks, skill validation for this package, `git diff --check`, and an explicit secret-pattern scan before publication.

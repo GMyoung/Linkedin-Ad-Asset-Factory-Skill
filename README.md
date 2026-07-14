@@ -159,7 +159,8 @@ printf '\n'
 | Plan | Select patterns and visuals, then create structured variant briefs. |
 | Copy plan | Produce copy, prompts, manifests, and audit artifacts. |
 | Generate | Create exactly five real assets from the source-grounded plan. |
-| Deploy | Sync the five sponsored posts into Harbor Network and publish it with Sites. |
+| Local Harbor preview | Sync the five sponsored posts into Harbor Network, start its local server, and verify the printed local URL. |
+| Optional publish | Deploy Harbor with Sites only when the user explicitly asks to publish or host it online. |
 | Modify | Revise one selected ad with an optional reference upload and Original/New viewer. |
 
 ## Safety boundary
