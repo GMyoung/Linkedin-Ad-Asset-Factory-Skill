@@ -19,7 +19,7 @@ Confirm dependencies without printing secret values. Check only whether required
 
 ## Stage 1: Intake
 
-Require a durable design source and collect campaign inputs:
+Require at least one usable URL or file. Treat that input as sufficient to launch and collect any additional campaign inputs that are already available:
 
 ```yaml
 generation:
@@ -30,10 +30,10 @@ generation:
   cta: Book a demo
   language: English
 project:
-  dry_run: true
+  dry_run: false
 ```
 
-If the user has not chosen paid generation, set `dry_run: true`.
+Always set `count: 5` for the default experience. Do not wait for a second launch command after a usable source arrives. Infer missing audience, offer, funnel, and CTA from the source; use a conservative “Learn more” CTA when necessary.
 
 ## Stage 2: Classify sources
 
@@ -78,7 +78,9 @@ Build, in order:
 
 Use `rules` by default. Use `hybrid` only when optional text decisions are enabled and a rules fallback is acceptable. Use `api` only when the selected text provider is configured and failure should be explicit.
 
-## Stage 5: Dry run
+## Stage 5: Automatic dry-run copy plan
+
+Run this stage during every launch to create the copy and audit artifacts that feed the final sponsored posts. Do not pause for approval or substitute these artifacts for the five real images. Harbor may use the post text, headline, and CTA in the normal post layout, but must not expose the internal copy plan as a separate UI block.
 
 CLI form:
 
@@ -102,19 +104,19 @@ prompts/
 generation_report.md
 ```
 
-No image API call is allowed in this stage.
+No image API call is allowed in this stage. Continue directly to real generation when the copy plan is usable.
 
-## Stage 6: Audit and approval
+## Stage 6: Automatic audit normalization
 
-Block recommendation of real generation when the dry-run audit is `needs_revision` or when required audience, offer, CTA, claims, or sources are missing.
+Resolve blocking copy issues automatically from the supplied sources. Infer missing campaign fields, replace unsupported statistics with non-data copy, and select a compatible non-data pattern rather than pausing for approval.
 
 Review visible copy before the long prompt. Make every headline, subheadline, CTA, statistic, quote, callout, badge, eyebrow, and footer/disclaimer slot editable.
 
-Freeze the approved briefs. Real generation must use these approved artifacts instead of rebuilding the campaign and discarding edits.
+Freeze the normalized briefs. Real generation must use these artifacts instead of rebuilding the campaign and discarding the source copy.
 
 ## Browser workflow
 
-Use the browser workflow for URL/file intake, drag/drop, extracted-image review, dry-run approval, editable copy, per-asset chat revisions, reference-file attachments, incremental image display, multiple saved workflow pages, local file inspection, and usage timing.
+Use the browser workflow for URL/file intake, drag/drop, automatic copy planning, five-image generation, editable copy, per-asset Modify requests, reference-file attachments, Original/New comparison, incremental image display, multiple saved workflow pages, local file inspection, and usage timing.
 
 Start it from `FACTORY_ROOT`:
 
@@ -130,19 +132,21 @@ python workflow_server.py --mock
 
 Honor the server's printed URL instead of assuming a port. A workflow page owns its background job; prevent duplicate jobs on the same page while allowing independent pages to run concurrently. Closing a running page should cancel that page's job. Closing a saved tab should preserve local files unless the user explicitly chooses deletion.
 
-## Stage 7: Real generation
+## Stage 7: Automatic five-image generation
 
-Enter only after explicit approval and real-generation intent.
+The first usable URL or file is real-generation intent. Confirm `OPENAI_API_KEY`, then generate exactly five assets from the normalized plan. Treat user-supplied brand assets as usable campaign inputs without requesting separate authorization. If some source fields are missing, use conservative source-grounded defaults; stop only when no supplied input is usable or the provider reports authentication, quota, moderation, or unrecoverable generation failure.
 
 ```powershell
-python generate_linkedin_assets.py --config assets\sample_config.yaml --dry-run false
+python generate_linkedin_assets.py --config assets\sample_config.yaml --count 5 --dry-run false
 ```
 
 The environment running the process must contain `OPENAI_API_KEY`. Do not echo its value.
 
-Generate one asset at a time from its approved brief, with conservative concurrency. After each completed asset, write the image, response metadata, and partial manifest so the browser can show incremental progress.
+Generate one asset at a time from its frozen brief, with conservative concurrency. After each completed asset, write the image, response metadata, and partial manifest so the browser can show incremental progress.
 
-## Stage 8: Review and revise
+## Stage 8: Sync, deploy, and revise
+
+After the fifth image completes, follow [harbor-network.md](harbor-network.md): sync the run into the bundled site, build it, and deploy it through Sites. Do not wait for a separate publish request.
 
 For output created outside the integrated workflow, start the review server when present:
 
@@ -154,10 +158,12 @@ For a selected-asset revision:
 
 1. Preserve the original brief and revision request.
 2. Update only the selected `asset_id`.
-3. Use the existing generated image as edit input when available.
+3. Automatically retrieve the selected existing generated image from Harbor's internal static-asset binding as the edit input. Never ask the user to re-upload the original or self-fetch it through the private deployed site URL.
 4. Add optional user-provided reference files only to that asset.
 5. Save candidate and provenance metadata.
-6. Keep the approved campaign and unrelated assets unchanged.
+6. Keep the frozen campaign and unrelated assets unchanged.
+
+On Harbor Network, label the action Modify instead of Comment. Accept the change request plus optional reference files, then preserve one full-size image viewport and let the user switch between Original and New with visible left/right controls (and keyboard arrow keys). Never render the versions as a two-column image grid.
 
 ## Stage 9: Export and Drive handoff
 
@@ -171,4 +177,4 @@ If the user asks for Google Drive upload, perform it with the connected Drive to
 
 ## Stage 10: Report
 
-State the completed stage, exact package root, command, output path, dry-run/real mode, decision mode, models, selected taxonomy, audit state, warnings, review URL, export path, and actual Drive link when applicable. Treat displayed token/cost values as estimates unless exact response usage was recorded.
+State the completed stage, exact package root, command, output path, dry-run copy artifact, real-generation result, decision mode, models, selected taxonomy, audit state, warnings, five image paths, Harbor deployment URL, revision availability, export path, and actual Drive link when applicable. Treat displayed token/cost values as estimates unless exact response usage was recorded.

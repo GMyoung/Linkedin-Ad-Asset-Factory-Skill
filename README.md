@@ -1,90 +1,147 @@
 # LinkedIn Ad Asset Factory
 
-> A portable B2B LinkedIn-ad skill: setup once, build a reviewed campaign, and generate only after approval.
+> Give an Agent Skills-compatible coding harness any usable URL or file, generate five B2B LinkedIn ad images, and publish them to the bundled Harbor Network site.
 
 [![Agent Skills](https://img.shields.io/badge/Agent%20Skills-portable-0A66C2)](./linkedin-ad-asset-factory/SKILL.md)
 [![OpenAI image API](https://img.shields.io/badge/OpenAI-image%20generation-412991)](https://platform.openai.com/api-keys)
 
-LinkedIn Ad Asset Factory turns an Agent Skills-compatible coding harness into a focused creative-production workflow. It takes a campaign brief plus URLs, PDFs, images, copy, brand material, and factual evidence; produces reviewable briefs and dry-run artifacts; and requires explicit approval before paid image generation.
-
-This is a process, not a prompt dump:
+LinkedIn Ad Asset Factory is a portable Agent Skill. With `OPENAI_API_KEY` configured, any readable URL or file starts the complete workflow:
 
 ```text
-Set up -> Intake -> Extract -> Plan -> Dry run -> Audit -> Approve -> Generate -> Revise -> Export
+Preflight -> Intake -> Copy plan -> Generate 5 -> Publish Harbor -> Modify/compare
 ```
 
-## Quick start
+## Install
 
-1. Install the skill (about one minute).
-2. Ask your harness to use `linkedin-ad-asset-factory`.
-3. It begins with a setup walkthrough, then stops at dry-run until you approve generation.
+### Recommended: install with the Agent Skills CLI
 
-## Install — one command
+Requirements: Node.js/npm. The installer finds the skill in this repository and asks which supported harness should receive it.
 
-Requirements: Git and Python 3.10+. For real image generation, you will later configure your own OpenAI API key.
+```bash
+npx skills add GMyoung/Linkedin-Ad-Asset-Factory-Skill --skill linkedin-ad-asset-factory -g
+```
 
-```text
+Install directly for a specific harness:
+
+```bash
+# OpenAI Codex
+npx skills add GMyoung/Linkedin-Ad-Asset-Factory-Skill --skill linkedin-ad-asset-factory -g -a codex --copy
+
+# Claude Code
+npx skills add GMyoung/Linkedin-Ad-Asset-Factory-Skill --skill linkedin-ad-asset-factory -g -a claude-code --copy
+```
+
+`--copy` avoids symlink restrictions on Windows. Remove it if you prefer a symlinked installation that follows a single canonical copy.
+
+### Python fallback
+
+Use the repository installer when Node.js is unavailable or when you want an explicit destination. Requirements: Git and Python 3.10+.
+
+```bash
 git clone --depth 1 https://github.com/GMyoung/Linkedin-Ad-Asset-Factory-Skill.git
 cd Linkedin-Ad-Asset-Factory-Skill
 python setup.py
 ```
 
-`setup.py` detects installed harnesses and installs the portable `SKILL.md` folder into each discovered skill directory. On Windows it copies the skill; on macOS/Linux it symlinks it, so `git pull` updates installed skills automatically.
+`python setup.py` installs into every detected supported harness. If none is detected, it falls back to the portable user directory `~/.agents/skills/`. This confirms that the skill files are present and valid; it cannot guarantee that a running harness has refreshed its skill index.
 
-Restart the harness (or open a new task), then say either:
+Target one harness explicitly:
+
+```bash
+python setup.py --host codex
+python setup.py --host claude
+python setup.py --host cursor
+python setup.py --host opencode
+python setup.py --host factory
+python setup.py --host kiro
+python setup.py --host universal
+```
+
+For another Agent Skills-compatible harness, pass the parent directory that it actually scans:
+
+```bash
+python setup.py --skills-dir /path/to/harness/skills
+```
+
+The final layout must be:
+
+```text
+<skills-root>/
+└── linkedin-ad-asset-factory/
+    ├── SKILL.md
+    ├── scripts/
+    ├── references/
+    └── integrations/
+```
+
+## Supported Python installer targets
+
+| Harness | Destination |
+| --- | --- |
+| OpenAI Codex | `$CODEX_HOME/skills/`, default `~/.codex/skills/` |
+| Claude Code | `~/.claude/skills/` |
+| Cursor | `~/.cursor/skills/` |
+| OpenCode | `$OPENCODE_CONFIG_DIR/skills/`, otherwise `$XDG_CONFIG_HOME/opencode/skills/` |
+| Factory Droid | `~/.factory/skills/` |
+| Kiro | `$KIRO_HOME/skills/`, default `~/.kiro/skills/` |
+| Portable/universal | `~/.agents/skills/` |
+
+`python setup.py --host all` installs all vendor-specific targets in the table, excluding the universal target to avoid duplicate skill entries. Add `--host universal` separately when you need it.
+
+The installer refuses to replace an unmanaged destination unless you pass `--force`. Review that directory before forcing replacement.
+
+## Verify installation
+
+Check every known destination without changing files:
+
+```bash
+python setup.py --check --json
+```
+
+The report distinguishes:
+
+- `present`: the target folder exists;
+- `managed`: this `setup.py` created the copy or symlink;
+- `skill_file_present`: `SKILL.md` exists;
+- `frontmatter_valid`: required `name` and `description` metadata are valid;
+- `loadable`: the folder has a valid Agent Skill layout.
+
+Then restart the harness or open a new task and confirm that `linkedin-ad-asset-factory` appears in its skill picker/list. File validation and harness discovery are separate checks.
+
+If the skill does not appear:
+
+1. Confirm the final path ends in `linkedin-ad-asset-factory/SKILL.md`.
+2. Install inside the same environment where the harness runs. Windows, WSL, containers, SSH hosts, and remote workspaces have different home directories.
+3. Check whether a custom agent disables skills or requires an explicit skill resource/path.
+4. Restart the harness or open a new task.
+5. Rerun with `--skills-dir` pointing to the exact directory documented by that harness.
+
+## First use
+
+After installation, explicitly invoke the skill or describe a matching job:
 
 ```text
 Use linkedin-ad-asset-factory to complete the initial setup walkthrough.
 ```
 
-or simply describe the job:
-
 ```text
-Create a five-asset LinkedIn campaign dry-run from this brief and these brand files.
+Use this URL and the attached files to generate five LinkedIn ads and publish them to Harbor Network.
 ```
 
-## Supported harnesses
+The first invocation checks only whether `OPENAI_API_KEY` is present; it never prints or records the value. No key is required to inspect inputs, but real image generation requires a user-managed key.
 
-The skill itself works in any harness that discovers an Agent Skills directory containing `SKILL.md`. The installer knows the following common locations:
-
-| Harness | Install command | Destination |
-| --- | --- | --- |
-| OpenAI Codex | `python setup.py --host codex` | `~/.codex/skills/` |
-| Claude Code | `python setup.py --host claude` | `~/.claude/skills/` |
-| Cursor | `python setup.py --host cursor` | `~/.cursor/skills/` |
-| OpenCode | `python setup.py --host opencode` | `~/.config/opencode/skills/` |
-| Factory Droid | `python setup.py --host factory` | `~/.factory/skills/` |
-| Kiro | `python setup.py --host kiro` | `~/.kiro/skills/` |
-
-Install every listed target with `python setup.py --host all`. For another compatible harness, give its skills parent directory directly:
-
-```text
-python setup.py --skills-dir /path/to/harness/skills
-```
-
-The installer refuses to replace an unmanaged existing skill. Review it first, then use `--force` only if replacement is intended. Check without changing anything:
-
-```text
-python setup.py --check --json
-```
-
-## First use: a safe setup walkthrough
-
-The first invocation checks the installed skill, optional factory root, and only the presence—not the value—of `OPENAI_API_KEY`. It then guides intake and offers dry-run before any paid generation.
-
-Set your API key yourself; never paste it into agent chat, commits, screenshots, or documents.
-
-Windows PowerShell:
+Set the key privately at Windows user scope:
 
 ```powershell
-$key = Read-Host "Paste your OpenAI API key"
+$secureKey = Read-Host "Paste your OpenAI API key" -AsSecureString
+$key = [System.Net.NetworkCredential]::new('', $secureKey).Password
 [Environment]::SetEnvironmentVariable("OPENAI_API_KEY", $key, "User")
-Remove-Variable key
+Remove-Variable key, secureKey
 ```
 
-Restart your harness after setting it. On macOS/Linux, set the variable through your shell profile or your organization’s secret manager. The skill never reads or prints its value.
+Completely restart the harness afterward. Never paste a key into agent chat, source code, a Google Doc, screenshots, or tracked `.env` files.
 
-For a one-session macOS/Linux setup, start the harness from the same terminal:
+For a one-session macOS/Linux setup, launch the harness from the same terminal:
 
 ```bash
 read -rs OPENAI_API_KEY
@@ -92,52 +149,58 @@ export OPENAI_API_KEY
 printf '\n'
 ```
 
-For persistent use, prefer your OS or organization secret manager; alternatively use a gitignored `.env` at the factory root if that factory supports it. Never commit the file.
-
-No key is needed for intake, planning, or dry-run. A key plus explicit user approval is required for real image generation.
-
 ## What the skill does
 
 | Stage | Outcome |
 | --- | --- |
-| Preflight | Verify environment, key presence, and optional factory root. |
+| Preflight | Verify the skill, key presence, and optional factory root. |
 | Intake | Separate design, content, requirements, references, brand assets, and factual evidence. |
 | Extract | Turn supplied material into traceable campaign facts and visual guidance. |
-| Plan | Select patterns/visuals and create structured variant briefs. |
-| Dry run | Produce copy plans, prompt plans, manifests, and review artifacts without API spend. |
-| Audit + approval | Check source grounding, claims, text budgets, and user approval. |
-| Generate + revise | Create only approved assets; preserve approved work during targeted revisions. |
-| Export | Produce Markdown and an optional handoff package. |
+| Plan | Select patterns and visuals, then create structured variant briefs. |
+| Copy plan | Produce copy, prompts, manifests, and audit artifacts. |
+| Generate | Create exactly five real assets from the source-grounded plan. |
+| Deploy | Sync the five sponsored posts into Harbor Network and publish it with Sites. |
+| Modify | Revise one selected ad with an optional reference upload and Original/New viewer. |
 
 ## Safety boundary
 
-- Do not invent claims, outcomes, statistics, customers, awards, partnerships, or endorsements.
-- Do not treat blocked, captcha, error, or bot-protection pages as campaign evidence.
-- Do not copy third-party ad creative.
-- Default to dry-run. Treat real generation as a paid, explicit-approval step.
+- Never invent claims, outcomes, statistics, customers, awards, partnerships, or endorsements.
+- Never treat blocked, captcha, access-denied, or error pages as campaign evidence.
+- Never copy third-party ad creative.
 - Keep API keys in environment variables or a gitignored secret store only.
+- Treat any usable URL or file as the launch request when required prerequisites are healthy.
 
 ## Repository layout
 
 ```text
 .
-├── setup.py                         # cross-harness installer and status check
+├── setup.py
 └── linkedin-ad-asset-factory/
-    ├── SKILL.md                     # portable agent execution contract
-    ├── scripts/preflight.py         # secret-safe first-run status check
-    └── references/                  # workflow, architecture, taxonomy, QA/safety
+    ├── SKILL.md
+    ├── integrations/harbor-network/
+    ├── scripts/preflight.py
+    ├── scripts/sync_harbor_campaign.py
+    └── references/
 ```
 
 ## Updating or removing
 
-For symlink installs on macOS/Linux, update the clone and restart the harness:
+For installations managed by the Agent Skills CLI:
 
-```text
-git pull
+```bash
+npx skills update linkedin-ad-asset-factory -g
+npx skills remove linkedin-ad-asset-factory -g
 ```
 
-For Windows copy installs, rerun `python setup.py --host <name>` after `git pull`. To remove it, delete the managed `linkedin-ad-asset-factory` folder from the listed skills directory.
+For Python installs, update the clone and rerun the same host command:
+
+```bash
+git pull
+python setup.py --host <host>
+```
+
+On Windows the Python installer copies the skill. On macOS/Linux it symlinks by default; pass `--copy` when an independent copy is preferable.
 
 ## Design inspiration
 
-The installation and documentation model follows the useful parts of [gstack](https://github.com/garrytan/gstack): one command, automatic host detection, explicit per-host installation, a safe update path, and a workflow users can try immediately. This repository contains one portable creative-production skill rather than a harness-specific plugin.
+The Python fallback follows the explicit per-host approach used by [gstack](https://github.com/garrytan/gstack). The recommended installation path uses the cross-harness [Agent Skills CLI](https://github.com/vercel-labs/skills), which maintains agent-specific destinations and update/remove workflows outside this repository.

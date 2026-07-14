@@ -1,0 +1,195 @@
+{
+  "campaign": {
+    "title": "Base44 Superagent",
+    "generated_at": "2026-07-13T21:55:46.206270+00:00",
+    "source_run": "factory_actual_final",
+    "asset_count": 5
+  },
+  "ads": [
+    {
+      "asset_id": "asset_001",
+      "image": "/generated-ads/asset_001.png",
+      "pattern_id": "P20",
+      "pattern_name": "UI workflow preview",
+      "visual_id": "V08",
+      "visual_name": "product UI device frame",
+      "headline": "Give your Superagent a job",
+      "post_text": "Tell it what to do. It handles the rest.",
+      "cta": "Get your Superagent",
+      "dry_run_copy": [
+        {
+          "slot": "headline",
+          "label": "Headline",
+          "text": "Give your Superagent a job"
+        },
+        {
+          "slot": "subheadline",
+          "label": "Subheadline",
+          "text": "Tell it what to do. It handles the rest."
+        },
+        {
+          "slot": "cta",
+          "label": "CTA",
+          "text": "Get your Superagent"
+        },
+        {
+          "slot": "callout_1",
+          "label": "Callout 1",
+          "text": "Describe"
+        },
+        {
+          "slot": "callout_2",
+          "label": "Callout 2",
+          "text": "Connect"
+        },
+        {
+          "slot": "callout_3",
+          "label": "Callout 3",
+          "text": "Done"
+        }
+      ]
+    },
+    {
+      "asset_id": "asset_002",
+      "image": "/generated-ads/asset_002.png",
+      "pattern_id": "P22",
+      "pattern_name": "Before and after",
+      "visual_id": "V02",
+      "visual_name": "split image and copy",
+      "headline": "Your recurring work, handled",
+      "post_text": "One proactive agent keeps every workflow moving.",
+      "cta": "Get your Superagent",
+      "dry_run_copy": [
+        {
+          "slot": "headline",
+          "label": "Headline",
+          "text": "Your recurring work, handled"
+        },
+        {
+          "slot": "subheadline",
+          "label": "Subheadline",
+          "text": "One proactive agent keeps every workflow moving."
+        },
+        {
+          "slot": "cta",
+          "label": "CTA",
+          "text": "Get your Superagent"
+        }
+      ]
+    },
+    {
+      "asset_id": "asset_003",
+      "image": "/generated-ads/asset_003.png",
+      "pattern_id": "P20",
+      "pattern_name": "UI workflow preview",
+      "visual_id": "V08",
+      "visual_name": "product UI device frame",
+      "headline": "More than answers. Real action.",
+      "post_text": "It reacts, follows through, and keeps work moving.",
+      "cta": "Get your Superagent",
+      "dry_run_copy": [
+        {
+          "slot": "headline",
+          "label": "Headline",
+          "text": "More than answers. Real action."
+        },
+        {
+          "slot": "subheadline",
+          "label": "Subheadline",
+          "text": "It reacts, follows through, and keeps work moving."
+        },
+        {
+          "slot": "cta",
+          "label": "CTA",
+          "text": "Get your Superagent"
+        },
+        {
+          "slot": "callout_1",
+          "label": "Callout 1",
+          "text": "Observe"
+        },
+        {
+          "slot": "callout_2",
+          "label": "Callout 2",
+          "text": "Act"
+        },
+        {
+          "slot": "callout_3",
+          "label": "Callout 3",
+          "text": "Update"
+        }
+      ]
+    },
+    {
+      "asset_id": "asset_004",
+      "image": "/generated-ads/asset_004.png",
+      "pattern_id": "P22",
+      "pattern_name": "Before and after",
+      "visual_id": "V09",
+      "visual_name": "flow or architecture diagram",
+      "headline": "No setup maze. Just the job.",
+      "post_text": "No local servers or configuration files to maintain.",
+      "cta": "Get your Superagent",
+      "dry_run_copy": [
+        {
+          "slot": "headline",
+          "label": "Headline",
+          "text": "No setup maze. Just the job."
+        },
+        {
+          "slot": "subheadline",
+          "label": "Subheadline",
+          "text": "No local servers or configuration files to maintain."
+        },
+        {
+          "slot": "cta",
+          "label": "CTA",
+          "text": "Get your Superagent"
+        }
+      ]
+    },
+    {
+      "asset_id": "asset_005",
+      "image": "/generated-ads/asset_005.png",
+      "pattern_id": "P20",
+      "pattern_name": "UI workflow preview",
+      "visual_id": "V08",
+      "visual_name": "product UI device frame",
+      "headline": "Powerful by design. Permissioned by you.",
+      "post_text": "It only accesses the tools and data you allow.",
+      "cta": "Get your Superagent",
+      "dry_run_copy": [
+        {
+          "slot": "headline",
+          "label": "Headline",
+          "text": "Powerful by design. Permissioned by you."
+        },
+        {
+          "slot": "subheadline",
+          "label": "Subheadline",
+          "text": "It only accesses the tools and data you allow."
+        },
+        {
+          "slot": "cta",
+          "label": "CTA",
+          "text": "Get your Superagent"
+        },
+        {
+          "slot": "callout_1",
+          "label": "Callout 1",
+          "text": "Allow"
+        },
+        {
+          "slot": "callout_2",
+          "label": "Callout 2",
+          "text": "Protect"
+        },
+        {
+          "slot": "callout_3",
+          "label": "Callout 3",
+          "text": "Control"
+        }
+      ]
+    }
+  ]
+}

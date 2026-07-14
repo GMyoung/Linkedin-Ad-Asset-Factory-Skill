@@ -109,7 +109,7 @@ Use stable built-in IDs. Store their full definitions as registry data in the im
 8. For awareness without a concrete offer, consider P17-P19, P43-P59, P63, or P65.
 9. Add P03 or P51 only when localization is real.
 10. Add P21 or P64 for genuinely technical audiences.
-11. Do not select P04, P05, or P44 without verified data. A dry-run placeholder must be visibly flagged; real generation stays blocked.
+11. Do not select P04, P05, or P44 without verified data. When data is missing, choose a non-data pattern instead of blocking the five-image launch.
 12. For large sets, select multiple compatible patterns rather than adjective-only prompt variants.
 
 ## Funnel pools

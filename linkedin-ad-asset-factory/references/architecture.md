@@ -22,6 +22,7 @@ asset_factory/
   report.py                         # manifests and reports
   export.py                         # final Markdown bundle
   web_workflow.py                   # browser orchestration
+  harbor_publish.py                 # optional wrapper around the bundled sync script
   taxonomy/
     models.py
     registry.py
@@ -154,22 +155,25 @@ Use image editing when an existing image or explicit reference image is part of 
 
 ## Browser workflow boundary
 
-The browser layer orchestrates the same extractor, structured artifacts, approval gates, image client, and export layer used by the CLI. It must not recalculate approved briefs during generation.
+The browser layer orchestrates the same extractor, structured artifacts, automatic copy audit, image client, Harbor handoff, and export layer used by the CLI. It must not recalculate frozen briefs during generation.
 
 Support:
 
 - URL and file intake;
 - extracted-input review;
-- dry-run audit and visible-copy editing;
-- frozen approval;
+- automatic dry-run copy audit and visible-copy editing;
+- frozen launch briefs;
 - per-workflow background jobs;
 - incremental asset-image attachment by `asset_id`;
 - per-asset revisions and reference uploads;
+- Original/New side-by-side revision display;
 - saved workflow pages;
 - local file inspection and explicit destructive deletion;
 - timing and estimated usage;
 - mobile-width layout;
 - mock mode for tests.
+
+The bundled Harbor Network project is an output adapter, not a second campaign engine. Feed it only the generated images and structured `on_image_text_plan.json` data through `scripts/sync_harbor_campaign.py`; then use the Sites build and hosting workflow. Keep revision image bytes in its logical `AD_ASSETS` R2 binding.
 
 ## Configuration and secrets
 
